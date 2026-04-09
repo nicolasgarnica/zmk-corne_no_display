@@ -33,35 +33,36 @@
 
         default_layer {
             display-name = "QWERTY";
-
-            // --------------------------------------------------------------------------------
-            // |  TAB |  Q  |  W  |  E  |  R  |  T  |   |  Y  |  U   |  I  |  O  |  P  | BKSP |
-            // | CTRL |  A  |  S  |  D  |  F  |  G  |   |  H  |  J   |  K  |  L  |  ;  |  '   | 
-            // | SHFT |  Z  |  X  |  C  |  V  |  B  |   |  N  |  M   |  ,  |  .  |  /  | ESC  |
-            //                    | GUI | LWR | SPC |   | ENT | RSE  | ALT |
+            // -----------------------------------------------------------------------------------------
+            // | ESC  |  Q       |  W       |  E       |  R       |  T  |   |  Y  |  U       |  I       |  O       |  P       |  -   |
+            // | TAB  | LGUI/A   | LALT/S   | LSFT/D   | LCTL/F   |  NAV/G  |   |  H  | RCTL/J   | RSFT/K   | RALT/L   | RGUI/;   | RALT |
+            // | CAPS |  Z       |  X       |  C       |  V       |  B  |   |  N  |  M       |  ,       |  .       |  /       | RALT |
+            //                              |  TO 1    |  MO 2    | ENT |   | SPC | BSPC     | DEL      |
 
             bindings = <
-&kp TAB    &kp Q  &kp W  &kp E     &kp R  &kp T          &kp Y        &kp U  &kp I      &kp O    &kp P     &kp BSPC
-&kp LCTRL  &kp A  &kp S  &kp D     &kp F  &kp G          &kp H        &kp J  &kp K      &kp L    &kp SEMI  &kp SQT
-&td0       &kp Z  &kp X  &kp C     &kp V  &kp B          &kp N        &kp M  &kp COMMA  &kp DOT  &kp FSLH  &kp ESC
-                         &kp LGUI  &mo 1  &lt 3 SPACE    &lt 3 ENTER  &mo 2  &kp RALT
+&kp ESC       &kp Q       &kp W       &kp E        &kp R        &kp T          &kp Y    &kp U        &kp I        &kp O       &kp P          &kp MINUS
+&kp TAB       &mt LGUI A  &mt LALT S  &mt LSHFT D  &mt LCTRL F  &lt 1 G          &kp H    &mt RCTRL J  &mt RSHFT K  &mt RALT L  &mt RGUI SEMI  &kp RALT
+&kp CAPSLOCK  &kp Z       &kp X       &kp C        &kp V        &kp B          &kp N    &kp M        &kp COMMA    &kp DOT     &kp FSLH       &kp RALT
+                                    &to 1        &mo 2        &kp ENTER      &kp SPACE  &kp BSPC   &kp DEL
             >;
         };
 
         lower_layer {
-            display-name = "NUMBER";
-
+            display-name = "NAV";
             // -----------------------------------------------------------------------------------------
-            // |  TAB |  1  |  2  |  3  |  4  |  5  |   |  6  |  7  |  8  |  9  |  0  | BKSP |
-            // | BTCLR| BT1 | BT2 | BT3 | BT4 | BT5 |   | LFT | DWN |  UP | RGT |     |      |
-            // | SHFT |     |     |     |     |     |   |     |     |     |     |     |      |
-            //                    | GUI |     | SPC |   | ENT |     | ALT |
+            // | &trans | N/A     | Mouse2  | Mouse1  | Mouse1  | MWhl Up  |   | PgUp  |  Home  |  Up    |  End   | N/A   | &trans |
+            // | &trans | MWhl L  | Mouse ← | Mouse ↓ | Mouse → | MWhl Dn  |   | MAccl0| Left   |  Down  | Right  | N/A   | &trans |
+            // | &trans | LAlt    | LShift  | LCtrl   | Mouse ↓ | Copy     |   | PgDn  | RCtrl  | RShift | RAlt   | RGUI  | &trans |
+            //                              | TG 3    | TO 0    | Enter    |   | Space | &trans  | &trans |
+            //
+            // NOTE: Mouse keys (mmv, mkp, msc) require CONFIG_ZMK_POINTING=y in corne.conf.
+            // If you don't have mouse support enabled, replace mouse bindings with &none.
 
             bindings = <
-&trans  &kp N1           &kp N2          &kp N3        &kp N4        &kp N5             &kp N6           &kp N7           &kp N8           &kp N9           &kp N0    &kp BSPC
-&trans  &bt BT_CLR_ALL   &bt BT_SEL 0    &bt BT_SEL 1  &bt BT_SEL 2  &bt BT_SEL 3       &kp LEFT         &kp DOWN         &kp UP           &kp RIGHT        &kp HOME  &kp PG_UP
-&trans  &rgb_ug RGB_OFF  &rgb_ug RGB_ON  &trans        &trans        &rgb_ug RGB_EFF    &rgb_ug RGB_EFR  &rgb_ug RGB_SPI  &rgb_ug RGB_BRI  &rgb_ug RGB_BRD  &kp END   &kp PG_DN
-                                         &trans        &trans        &trans             &kp INS          &kp DEL          &trans
+&trans  &none          &none     &none     &none     &none        &kp PG_UP  &kp HOME   &kp UP     &kp END    &none     &trans
+&trans  &none          &none     &none     &none     &none        &none      &kp LEFT   &kp DOWN   &kp RIGHT  &none     &trans
+&trans  &kp LGUI       &kp LALT  &kp LSHIFT &kp LCTRL &none       &kp PG_DN  &kp RCTRL  &kp RSHFT  &kp RALT   &kp RGUI  &trans
+                                 &tog 3    &to 0     &kp ENTER    &kp SPACE  &trans     &trans
             >;
         };
 
@@ -69,26 +70,34 @@
             display-name = "SYMBOL";
 
             // -----------------------------------------------------------------------------------------
-            // |  TAB |  !  |  @  |  #  |  $  |  %  |   |  ^  |  &  |  *  |  (  |  )  | BKSP |
-            // | CTRL |     |     |     |     |     |   |  -  |  =  |  [  |  ]  |  \  |  `   |
-            // | SHFT |     |     |     |     |     |   |  _  |  +  |  {  |  }  | "|" |  ~   |
-            //                    | GUI |     | SPC |   | ENT |     | ALT |
-
+            // |  `   |  !   |  @   |  #   |  $   |  %  |   |  ^   |  &   |  *   |  (   |  )   |  -   |
+            // | N/A  | LGUI | LALT | LSFT | LCTL | N/A |   | N/A  | RCTL | RSFT | RALT | RGUI | N/A  |
+            // | N/A  | N/A  | N/A  | N/A  | N/A  | N/A |   | N/A  | N/A  | N/A  | N/A  | N/A  | N/A  |
+            //                      | DEL  |&trans| ENT |   | SPC  | BSPC | DEL  |
+            
             bindings = <
-&trans  &kp EXCL      &kp AT        &kp HASH  &kp DLLR  &kp PRCNT    &kp CARET  &kp AMPS   &kp ASTRK  &kp LPAR  &kp RPAR  &kp BSPC
-&trans  &none         &none         &none     &none     &none        &kp MINUS  &kp EQUAL  &kp LBKT   &kp RBKT  &kp BSLH  &kp GRAVE
-&trans  &out OUT_USB  &out OUT_BLE  &none     &none     &none        &kp UNDER  &kp PLUS   &kp LBRC   &kp RBRC  &kp PIPE  &kp TILDE
-                                    &trans    &trans    &kp SPACE    &kp RET    &trans     &trans
+&kp GRAVE  &kp EXCL  &kp AT    &kp HASH   &kp DLLR   &kp PRCNT    &kp CARET  &kp AMPS   &kp ASTRK  &kp LPAR   &kp RPAR   &kp MINUS
+&none      &kp LGUI  &kp LALT  &kp LSHFT  &kp LCTRL  &none        &none      &kp RCTRL  &kp RSHFT  &kp RALT   &kp RGUI   &none
+&none      &none     &none     &none      &none      &none        &none      &none      &none      &none      &none      &none
+                                &kp DEL    &trans     &kp ENTER    &kp SPACE  &kp BSPC   &kp DEL
             >;
         };
 
         layer_3 {
             display-name = "Fn";
             bindings = <
-&trans  &kp F1      &kp F2  &kp F3  &kp F4      &kp F5         &kp F6       &kp F7  &kp F8  &kp F9  &kp F10          &kp F11
-&trans  &bt BT_CLR  &trans  &trans  &sys_reset  &bootloader    &bootloader  &trans  &trans  &trans  &kp PRINTSCREEN  &kp F12
-&trans  &trans      &trans  &trans  &trans      &trans         &trans       &trans  &trans  &trans  &kp SCROLLLOCK   &kp PAUSE_BREAK
-                            &trans  &trans      &studio_unlock         &trans       &trans  &trans
+            // -----------------------------------------------------------------------------------------
+            // | ESC      | F1   | F2     | F3      | F4     | F5        |   | F8        | F9       | F10       | F11      | F12  | BSPC     |
+            // | EEP_RST  | HueUp| Sat Up | Bright+ | Speed+ | SwapCtlGu|   | F7        |UnswpCtlGu| RGB Tog   | RGB Eff+ | N/A  | EEP_RST  |
+            // | Reset    | HueDn| Sat Dn | Bright- | Speed- | N/A       |   | N/A       | N/A      | N/A       | N/A      | N/A  | Reset    |
+            //                            | &trans  | TO 0   | Enter     |   | Space     | &trans   | BSPC      |
+            
+            bindings = <
+&kp ESC       &kp F1              &kp F2              &kp F3              &kp F4              &kp F5                   &kp F8     &kp F9              &kp F10             &kp F11             &kp F12  &kp BSPC
+&bootloader   &rgb_ug RGB_HUI     &rgb_ug RGB_SAI     &rgb_ug RGB_BRI     &rgb_ug RGB_SPI     &none                    &kp F7     &none               &rgb_ug RGB_TOG     &rgb_ug RGB_EFF     &none    &bootloader
+&sys_reset    &rgb_ug RGB_HUD     &rgb_ug RGB_SAD     &rgb_ug RGB_BRD     &rgb_ug RGB_SPD     &none                    &none      &none               &none               &none               &none    &sys_reset
+                                                       &trans              &to 0               &kp ENTER                &kp SPACE  &trans              &kp BSPC
+
             >;
         };
     };
