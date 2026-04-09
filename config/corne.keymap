@@ -22,12 +22,12 @@
 
 /* Mod-tap: 300 ms gives home-row mods time to distinguish tap from hold */
 &mt {
-    tapping-term-ms = <300>;
+    tapping-term-ms = <400>;
 };
 
-/* Layer-tap: same 300 ms window for layer activation on hold */
+/* Layer-tap: same window for layer activation on hold */
 &lt {
-    tapping-term-ms = <300>;
+    tapping-term-ms = <400>;
 };
 
 /* ── Mouse / scroll tuning ────────────────────────────────────────────────── */
