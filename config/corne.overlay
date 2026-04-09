@@ -1,0 +1,76 @@
+/*
+ * Physical layout overlay for standard 42-key Corne
+ * Enables ZMK Studio support by defining key positions.
+ *
+ * Coordinates derived from config/corne.json (default_transform).
+ * key_physical_attrs format: <width height x y rot rx ry>
+ * All values in centi-units (1 key = 100).
+ */
+
+#include <physical_layouts.dtsi>
+
+/ {
+    chosen {
+        zmk,physical-layout = &corne_physical_layout;
+    };
+
+    corne_physical_layout: corne_physical_layout {
+        compatible = "zmk,physical-layout";
+        display-name = "Corne";
+
+        transform = <&default_transform>;
+
+        keys  //                     w   h    x    y     rot    rx    ry
+            // Row 0 - Left
+            = <&key_physical_attrs 100 100    0   36       0     0     0>   // Tab
+            , <&key_physical_attrs 100 100  100   36       0     0     0>   // Q
+            , <&key_physical_attrs 100 100  200   11       0     0     0>   // W
+            , <&key_physical_attrs 100 100  300    0       0     0     0>   // E
+            , <&key_physical_attrs 100 100  400   11       0     0     0>   // R
+            , <&key_physical_attrs 100 100  500   24       0     0     0>   // T
+            // Row 0 - Right
+            , <&key_physical_attrs 100 100  900   24       0     0     0>   // Y
+            , <&key_physical_attrs 100 100 1000   11       0     0     0>   // U
+            , <&key_physical_attrs 100 100 1100    0       0     0     0>   // I
+            , <&key_physical_attrs 100 100 1200   11       0     0     0>   // O
+            , <&key_physical_attrs 100 100 1300   36       0     0     0>   // P
+            , <&key_physical_attrs 100 100 1400   36       0     0     0>   // BSPC
+            // Row 1 - Left
+            , <&key_physical_attrs 100 100    0  136       0     0     0>   // Ctrl
+            , <&key_physical_attrs 100 100  100  136       0     0     0>   // A
+            , <&key_physical_attrs 100 100  200  111       0     0     0>   // S
+            , <&key_physical_attrs 100 100  300  100       0     0     0>   // D (99 -> 100 for clean alignment)
+            , <&key_physical_attrs 100 100  400  111       0     0     0>   // F
+            , <&key_physical_attrs 100 100  500  124       0     0     0>   // G
+            // Row 1 - Right
+            , <&key_physical_attrs 100 100  900  124       0     0     0>   // H
+            , <&key_physical_attrs 100 100 1000  111       0     0     0>   // J
+            , <&key_physical_attrs 100 100 1100  100       0     0     0>   // K (99 -> 100)
+            , <&key_physical_attrs 100 100 1200  111       0     0     0>   // L
+            , <&key_physical_attrs 100 100 1300  136       0     0     0>   // ;
+            , <&key_physical_attrs 100 100 1400  136       0     0     0>   // '
+            // Row 2 - Left
+            , <&key_physical_attrs 100 100    0  236       0     0     0>   // LShift
+            , <&key_physical_attrs 100 100  100  236       0     0     0>   // Z
+            , <&key_physical_attrs 100 100  200  211       0     0     0>   // X
+            , <&key_physical_attrs 100 100  300  200       0     0     0>   // C (199 -> 200)
+            , <&key_physical_attrs 100 100  400  211       0     0     0>   // V
+            , <&key_physical_attrs 100 100  500  224       0     0     0>   // B
+            // Row 2 - Right
+            , <&key_physical_attrs 100 100  900  224       0     0     0>   // N
+            , <&key_physical_attrs 100 100 1000  211       0     0     0>   // M
+            , <&key_physical_attrs 100 100 1100  200       0     0     0>   // , (199 -> 200)
+            , <&key_physical_attrs 100 100 1200  211       0     0     0>   // .
+            , <&key_physical_attrs 100 100 1300  236       0     0     0>   // /
+            , <&key_physical_attrs 100 100 1400  236       0     0     0>   // Esc
+            // Row 3 - Thumbs Left
+            , <&key_physical_attrs 100 100  348  313       0     0     0>   // GUI
+            , <&key_physical_attrs 100 100  448  313    1500   498   788>   // LWR (15 deg)
+            , <&key_physical_attrs 100 150  548  263    3000   498   788>   // SPC (30 deg, 1.5u tall)
+            // Row 3 - Thumbs Right
+            , <&key_physical_attrs 100 150  852  263 (-3000)  1102   788>   // ENT (-30 deg, 1.5u tall)
+            , <&key_physical_attrs 100 100  952  313 (-1500)  1102   788>   // RSE (-15 deg)
+            , <&key_physical_attrs 100 100 1052  313       0     0     0>   // ALT
+            ;
+    };
+};
