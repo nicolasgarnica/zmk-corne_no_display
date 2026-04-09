@@ -20,14 +20,19 @@
 
 /* ── Extended tapping-term timers ─────────────────────────────────────────── */
 
-/* Mod-tap: 300 ms gives home-row mods time to distinguish tap from hold */
+/* Mod-tap: Settings to try to reduce accidenta setting off of home row mods */
 &mt {
-    tapping-term-ms = <400>;
+    tapping-term-ms = <280>;
+    quick-tap-ms = <175>;
+    require-prior-idle-ms = <150>;
+    flavor = "balanced";
 };
 
-/* Layer-tap: same window for layer activation on hold */
+/* Layer-tap: similar with what is setup for mod-tap */
 &lt {
-    tapping-term-ms = <400>;
+    tapping-term-ms = <280>;
+    quick-tap-ms = <175>;
+    require-prior-idle-ms = <150>;
 };
 
 /* ── Mouse / scroll tuning ────────────────────────────────────────────────── */
