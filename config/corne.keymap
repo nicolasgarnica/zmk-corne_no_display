@@ -2,6 +2,12 @@
  * Copyright (c) 2020 The ZMK Contributors
  *
  * SPDX-License-Identifier: MIT
+ *
+ * Adapted from QMK LAYOUT_split_3x6_3_ex2 keymap.
+ * The 4 extra keys (2 per half, between the halves) have been removed
+ * to fit the standard 42-key Corne layout.
+ *
+ * Mouse keys (mkp, mmv, msc) require CONFIG_ZMK_POINTING=y in corne.conf.
  */
 
 #include <behaviors.dtsi>
@@ -9,22 +15,33 @@
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/ext_power.h>
 #include <dt-bindings/zmk/outputs.h>
+#include <dt-bindings/zmk/pointing.h>
 #include <dt-bindings/zmk/rgb.h>
 
-// / {
-//    chosen {
-//        zmk,matrix_transform = &default_transform;
-//        // zmk,matrix_transform = &five_column_transform;
-//    };
-//};
+/* ── Extended tapping-term timers ─────────────────────────────────────────── */
 
-/* Increase mod-tap / layer-tap tapping term to 300ms */
+/* Mod-tap: 300 ms gives home-row mods time to distinguish tap from hold */
 &mt {
     tapping-term-ms = <300>;
 };
 
+/* Layer-tap: same 300 ms window for layer activation on hold */
 &lt {
     tapping-term-ms = <300>;
+};
+
+/* ── Mouse / scroll tuning ────────────────────────────────────────────────── */
+
+&mmv {
+    time-to-max-speed-ms = <500>;
+    acceleration-exponent = <1>;
+    trigger-period-ms = <16>;
+};
+
+&msc {
+    acceleration-exponent = <1>;
+    time-to-max-speed-ms = <100>;
+    delay-ms = <0>;
 };
 
 / {
@@ -42,71 +59,69 @@
 
         default_layer {
             display-name = "QWERTY";
-            // -----------------------------------------------------------------------------------------
-            // | ESC  |  Q       |  W       |  E       |  R       |  T  |   |  Y  |  U       |  I       |  O       |  P       |  -   |
-            // | TAB  | LGUI/A   | LALT/S   | LSFT/D   | LCTL/F   |  NAV/G  |   |  H  | RCTL/J   | RSFT/K   | RALT/L   | RGUI/;   | RALT |
-            // | CAPS |  Z       |  X       |  C       |  V       |  B  |   |  N  |  M       |  ,       |  .       |  /       | RALT |
-            //                              |  TO 1    |  MO 2    | ENT |   | SPC | BSPC     | DEL      |
+            // ─────────────────────────────────────────────────────────────────
+            // | ESC  |  Q       |  W       |  E       |  R       |  T       |   |  Y  |  U       |  I       |  O       |  P       |  -       |
+            // | TAB  | LGUI/A   | LALT/S   | LSFT/D   | LCTL/F   | NAV/G    |   |  H  | RCTL/J   | RSFT/K   | RALT/L   | RGUI/;   |  '       |
+            // | CAPS |  Z       |  X       |  C       |  V       |  B       |   |  N  |  M       |  ,       |  .       |  /       | RA([)    |
+            //                              |  TO 1    |  MO 2    |  ENT     |   | SPC | BSPC     | DEL      |
 
             bindings = <
 &kp ESC       &kp Q       &kp W       &kp E        &kp R        &kp T          &kp Y    &kp U        &kp I        &kp O       &kp P          &kp MINUS
-&kp TAB       &mt LGUI A  &mt LALT S  &mt LSHFT D  &mt LCTRL F  &lt 1 G          &kp H    &mt RCTRL J  &mt RSHFT K  &mt RALT L  &mt RGUI SEMI  &kp RALT
-&kp CAPSLOCK  &kp Z       &kp X       &kp C        &kp V        &kp B          &kp N    &kp M        &kp COMMA    &kp DOT     &kp FSLH       &kp RALT
-                                    &to 1        &mo 2        &kp ENTER      &kp SPACE  &kp BSPC   &kp DEL
+&kp TAB       &mt LGUI A  &mt LALT S  &mt LSHFT D  &mt LCTRL F  &lt 1 G        &kp H    &mt RCTRL J  &mt RSHFT K  &mt RALT L  &mt RGUI SEMI  &kp SQT
+&kp CAPSLOCK  &kp Z       &kp X       &kp C        &kp V        &kp B          &kp N    &kp M        &kp COMMA    &kp DOT     &kp FSLH       &kp RA(LBKT)
+                                       &to 1        &mo 2        &kp ENTER      &kp SPACE  &kp BSPC   &kp DEL
             >;
         };
 
         lower_layer {
             display-name = "NAV";
-            // -----------------------------------------------------------------------------------------
-            // | &trans | N/A     | Mouse2  | Mouse1  | Mouse1  | MWhl Up  |   | PgUp  |  Home  |  Up    |  End   | N/A   | &trans |
-            // | &trans | MWhl L  | Mouse ← | Mouse ↓ | Mouse → | MWhl Dn  |   | MAccl0| Left   |  Down  | Right  | N/A   | &trans |
-            // | &trans | LAlt    | LShift  | LCtrl   | Mouse ↓ | Copy     |   | PgDn  | RCtrl  | RShift | RAlt   | RGUI  | &trans |
-            //                              | TG 3    | TO 0    | Enter    |   | Space | &trans  | &trans |
-            //
-            // NOTE: Mouse keys (mmv, mkp, msc) require CONFIG_ZMK_POINTING=y in corne.conf.
-            // If you don't have mouse support enabled, replace mouse bindings with &none.
+            // ─────────────────────────────────────────────────────────────────
+            // | &trans | ---      | MBtn2    | M↑       | MBtn1    | MScr↑  |   | PgUp | Home   | Up     | End    | ---   | &trans |
+            // | &trans | MScr←    | M←       | M↓       | M→       | MScr→  |   | ---  | Left   | Down   | Right  | ---   | &trans |
+            // | &trans | LGUI     | LALT     | LSFT     | LCTL     | M↓     |   | PgDn | RCTL   | RSFT   | RALT   | RGUI  | &trans |
+            //                               | TG 3     | TO 0     | ENT    |   | SPC  | &trans | &trans |
 
             bindings = <
-&trans  &none          &none     &none     &none     &none        &kp PG_UP  &kp HOME   &kp UP     &kp END    &none     &trans
-&trans  &none          &none     &none     &none     &none        &none      &kp LEFT   &kp DOWN   &kp RIGHT  &none     &trans
-&trans  &kp LGUI       &kp LALT  &kp LSHIFT &kp LCTRL &none       &kp PG_DN  &kp RCTRL  &kp RSHFT  &kp RALT   &kp RGUI  &trans
-                                 &tog 3    &to 0     &kp ENTER    &kp SPACE  &trans     &trans
+&trans  &none            &mkp RCLK        &mmv MOVE_UP    &mkp LCLK        &msc SCRL_UP      &kp PG_UP  &kp HOME   &kp UP     &kp END    &none     &trans
+&trans  &msc SCRL_LEFT   &mmv MOVE_LEFT   &mmv MOVE_DOWN  &mmv MOVE_RIGHT  &msc SCRL_RIGHT   &none      &kp LEFT   &kp DOWN   &kp RIGHT  &none     &trans
+&trans  &kp LGUI         &kp LALT         &kp LSHFT       &kp LCTRL        &mmv MOVE_DOWN     &kp PG_DN  &kp RCTRL  &kp RSHFT  &kp RALT   &kp RGUI  &trans
+                                           &tog 3          &to 0            &kp ENTER          &kp SPACE  &trans     &trans
             >;
         };
 
         raise_layer {
             display-name = "SYMBOL";
+            // ─────────────────────────────────────────────────────────────────
+            // |  `   |  1         |  2         |  3         |  4         |  5   |   |  6   |  7         |  8         |  9         |  0         |  -   |
+            // | ---  | LGUI/NUBS  | LALT/'     | LSFT/[     | LCTL/-     | ---  |   | ---  | RCTL/=     | RSFT/]     | RALT/\     | RGUI/INT1  | ---  |
+            // | ---  | ---        | ---        | ---        | ---        | ---  |   | ---  | ---        | ---        | ---        | ---        | ---  |
+            //                                  | DEL        | &trans     | ENT  |   | SPC  | BSPC       | DEL        |
 
-            // -----------------------------------------------------------------------------------------
-            // |  `   |  !   |  @   |  #   |  $   |  %  |   |  ^   |  &   |  *   |  (   |  )   |  -   |
-            // | N/A  | LGUI | LALT | LSFT | LCTL | N/A |   | N/A  | RCTL | RSFT | RALT | RGUI | N/A  |
-            // | N/A  | N/A  | N/A  | N/A  | N/A  | N/A |   | N/A  | N/A  | N/A  | N/A  | N/A  | N/A  |
-            //                      | DEL  |&trans| ENT |   | SPC  | BSPC | DEL  |
-            
             bindings = <
-&kp GRAVE  &kp EXCL  &kp AT    &kp HASH   &kp DLLR   &kp PRCNT    &kp CARET  &kp AMPS   &kp ASTRK  &kp LPAR   &kp RPAR   &kp MINUS
-&none      &kp LGUI  &kp LALT  &kp LSHFT  &kp LCTRL  &none        &none      &kp RCTRL  &kp RSHFT  &kp RALT   &kp RGUI   &none
-&none      &none     &none     &none      &none      &none        &none      &none      &none      &none      &none      &none
-                                &kp DEL    &trans     &kp ENTER    &kp SPACE  &kp BSPC   &kp DEL
+&kp GRAVE  &kp N1                  &kp N2          &kp N3          &kp N4          &kp N5       &kp N6  &kp N7          &kp N8          &kp N9          &kp N0           &kp MINUS
+&none      &mt LGUI NON_US_BSLH    &mt LALT SQT    &mt LSHFT LBKT  &mt LCTRL MINUS &none        &none   &mt RCTRL EQUAL &mt RSHFT RBKT  &mt RALT BSLH   &mt RGUI INT_YEN &none
+&none      &none                   &none           &none           &none           &none        &none   &none           &none           &none           &none            &none
+                                                    &kp DEL         &trans          &kp ENTER    &kp SPACE  &kp BSPC     &kp DEL
             >;
         };
 
-        layer_3 {
+        fn_layer {
             display-name = "Fn";
-            bindings = <
-            // -----------------------------------------------------------------------------------------
-            // | ESC      | F1   | F2     | F3      | F4     | F5        |   | F8        | F9       | F10       | F11      | F12  | BSPC     |
-            // | EEP_RST  | HueUp| Sat Up | Bright+ | Speed+ | SwapCtlGu|   | F7        |UnswpCtlGu| RGB Tog   | RGB Eff+ | N/A  | EEP_RST  |
-            // | Reset    | HueDn| Sat Dn | Bright- | Speed- | N/A       |   | N/A       | N/A      | N/A       | N/A      | N/A  | Reset    |
-            //                            | &trans  | TO 0   | Enter     |   | Space     | &trans   | BSPC      |
-            
-            bindings = <
-&kp ESC       &kp F1              &kp F2              &kp F3              &kp F4              &kp F5                   &kp F8     &kp F9              &kp F10             &kp F11             &kp F12  &kp BSPC
-&bootloader   &rgb_ug RGB_HUI     &rgb_ug RGB_SAI     &rgb_ug RGB_BRI     &rgb_ug RGB_SPI     &none                    &kp F7     &none               &rgb_ug RGB_TOG     &rgb_ug RGB_EFF     &none    &bootloader
-&sys_reset    &rgb_ug RGB_HUD     &rgb_ug RGB_SAD     &rgb_ug RGB_BRD     &rgb_ug RGB_SPD     &none                    &none      &none               &none               &none               &none    &sys_reset
-                                                       &trans              &to 0               &kp ENTER                &kp SPACE  &trans              &kp BSPC
+            // ─────────────────────────────────────────────────────────────────
+            // | ESC       | F1      | F2      | F3      | F4      | F5       |   | F8      | F9      | F10     | F11     | F12     | BSPC        |
+            // | &bt CLR   | HUE+    | SAT+    | BRI+    | SPD+    | ---      |   | ---     | RGB←    | RGB TOG | RGB→    | ---     | &bt CLR     |
+            // | BOOT      | HUE-    | SAT-    | BRI-    | SPD-    | ---      |   | ---     | ---     | ---     | ---     | ---     | BOOT        |
+            //                                 | &trans  | TO 0    | ENT      |   | SPC     | &trans  | BSPC    |
+            //
+            // NOTE: QMK CG_SWAP / CG_NORM (Ctrl↔GUI swap) have no direct
+            // ZMK equivalent. Use OS-level settings or a combo instead.
+            // QMK EE_CLR mapped to &bt BT_CLR (closest useful equivalent).
 
+            bindings = <
+&kp ESC      &kp F1           &kp F2           &kp F3           &kp F4           &kp F5             &kp F8   &kp F9           &kp F10          &kp F11          &kp F12  &kp BSPC
+&bt BT_CLR   &rgb_ug RGB_HUI  &rgb_ug RGB_SAI  &rgb_ug RGB_BRI  &rgb_ug RGB_SPI  &none              &none    &rgb_ug RGB_EFR  &rgb_ug RGB_TOG  &rgb_ug RGB_EFF  &none    &bt BT_CLR
+&bootloader  &rgb_ug RGB_HUD  &rgb_ug RGB_SAD  &rgb_ug RGB_BRD  &rgb_ug RGB_SPD  &none              &none    &none            &none            &none            &none    &bootloader
+                                                &trans           &to 0            &kp ENTER          &kp SPACE  &trans         &kp BSPC
             >;
         };
     };
