@@ -18,6 +18,15 @@
 //    };
 //};
 
+/* Increase mod-tap / layer-tap tapping term to 300ms */
+&mt {
+    tapping-term-ms = <300>;
+};
+
+&lt {
+    tapping-term-ms = <300>;
+};
+
 / {
     behaviors {
         td0: td0 {
